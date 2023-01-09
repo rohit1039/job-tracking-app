@@ -105,7 +105,9 @@ public class JobServiceImpl implements JobService
     @Override
     public List<JobDTO> getAllJobs(int pageNumber, int pageSize, String sortByJobId, String sortByCompany, String sortByPosition, String sortByJobLocation, String sortDir)
     {
-        Sort sort = (sortDir.equalsIgnoreCase("asc")) ? Sort.by(sortByJobId, sortByCompany, sortByPosition, sortByJobLocation).ascending() : Sort.by(sortByJobId, sortByCompany, sortByPosition, sortByJobLocation).descending();
+        Sort sort = (sortDir.equalsIgnoreCase("asc")) ?
+                    Sort.by(sortByJobId, sortByCompany, sortByPosition, sortByJobLocation).ascending() :
+                    Sort.by(sortByJobId, sortByCompany, sortByPosition, sortByJobLocation).descending();
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
 

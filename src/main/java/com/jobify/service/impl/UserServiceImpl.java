@@ -53,7 +53,9 @@ public class UserServiceImpl implements UserService
     @Override
     public List<UserDTO> getAllUsers(int pageNumber, int pageSize, String sortByUserId, String sortByLocation, String sortByUsername, String sortDir)
     {
-        Sort sort = (sortDir.equalsIgnoreCase("asc")) ? Sort.by(sortByUserId, sortByLocation, sortByUsername).ascending() : Sort.by(sortByUserId, sortByLocation, sortByUsername).descending();
+        Sort sort = (sortDir.equalsIgnoreCase("asc")) ?
+                    Sort.by(sortByUserId, sortByLocation, sortByUsername).ascending() :
+                    Sort.by(sortByUserId, sortByLocation, sortByUsername).descending();
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
 
