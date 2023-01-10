@@ -31,14 +31,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
     {
         final Map<String, String> errors = new ConcurrentHashMap<>();
 
-        exception.getBindingResult().getFieldErrors().forEach((error) ->
-        {
-            errors.put(error.getField(), error.getDefaultMessage());
-        });
-        exception.getBindingResult().getGlobalErrors().forEach((errorGlobal) ->
-        {
-            errors.put(((FieldError) errorGlobal).getField(), errorGlobal.getDefaultMessage());
-        });
+        exception.getBindingResult()
+                 .getFieldErrors()
+                 .forEach((error) ->
+                          {
+                              errors.put(error.getField(), error.getDefaultMessage());
+                          });
+        exception.getBindingResult()
+                 .getGlobalErrors()
+                 .forEach((errorGlobal) ->
+                          {
+                              errors.put(((FieldError) errorGlobal).getField(), errorGlobal.getDefaultMessage());
+                          });
         LOGGER.error("{}", errors);
         return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);
     }
@@ -53,7 +57,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
                                                                              final WebRequest request)
     {
         final ExceptionInApiResponse response = new ExceptionInApiResponse(LocalDateTime.now(), exception.getMessage(),
-            request.getDescription(false));
+                                                                           request.getDescription(false));
         LOGGER.error("{}", response.getMessage());
         return new ResponseEntity<ExceptionInApiResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -68,7 +72,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
                                                                               final WebRequest request)
     {
         final ExceptionInApiResponse response = new ExceptionInApiResponse(LocalDateTime.now(), exception.getMessage(),
-            request.getDescription(false));
+                                                                           request.getDescription(false));
         LOGGER.error("{}", response.getMessage());
         return new ResponseEntity<ExceptionInApiResponse>(response, HttpStatus.NOT_FOUND);
     }
@@ -83,7 +87,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
                                                                           final WebRequest request)
     {
         final ExceptionInApiResponse response = new ExceptionInApiResponse(LocalDateTime.now(), exception.getMessage(),
-            request.getDescription(false));
+                                                                           request.getDescription(false));
         LOGGER.error("{}", response.getMessage());
         return new ResponseEntity<ExceptionInApiResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -97,8 +101,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
     public ResponseEntity<ExceptionInApiResponse> handleUnAuthorizedErrorException(final BadCredentialsException exception,
                                                                                    final WebRequest request)
     {
-        final ExceptionInApiResponse response = new ExceptionInApiResponse(LocalDateTime.now(), exception.getLocalizedMessage(),
-            request.getDescription(false));
+        final ExceptionInApiResponse
+            response =
+            new ExceptionInApiResponse(LocalDateTime.now(), exception.getLocalizedMessage(),
+                                       request.getDescription(false));
         LOGGER.error("{}", response.getMessage());
         return new ResponseEntity<ExceptionInApiResponse>(response, HttpStatus.FORBIDDEN);
     }
@@ -113,7 +119,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
                                                                              final WebRequest request)
     {
         final ExceptionInApiResponse response = new ExceptionInApiResponse(LocalDateTime.now(), exception.getMessage(),
-            request.getDescription(false));
+                                                                           request.getDescription(false));
         LOGGER.error("{}", response.getMessage());
         return new ResponseEntity<ExceptionInApiResponse>(response, HttpStatus.NOT_FOUND);
     }

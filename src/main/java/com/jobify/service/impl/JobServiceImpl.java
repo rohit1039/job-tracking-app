@@ -58,8 +58,9 @@ public class JobServiceImpl implements JobService
     {
         Job job = this.modelMapper.map(jobDTO, Job.class);
 
-        User user = this.userRepo.findById(userId).orElseThrow(() ->
-            new UsernameNotFoundException("User with ID: " + userId + " not found to create the job!"));
+        User user = this.userRepo.findById(userId)
+                                 .orElseThrow(() ->
+                                                  new UsernameNotFoundException("User with ID: " + userId + " not found to create the job!"));
 
         job.setCreatedBy(user.getFirstName() + " " + user.getLastName());
 
@@ -96,7 +97,8 @@ public class JobServiceImpl implements JobService
     @Override
     public JobDTO getJobById(Integer jobId)
     {
-        Job job = this.jobRepo.findById(jobId).orElseThrow(() -> new ApiException("Job not found with ID: " + jobId));
+        Job job = this.jobRepo.findById(jobId)
+                              .orElseThrow(() -> new ApiException("Job not found with ID: " + jobId));
 
         return this.modelMapper.map(job, JobDTO.class);
     }
@@ -106,30 +108,39 @@ public class JobServiceImpl implements JobService
     public List<JobDTO> getAllJobs(int pageNumber, int pageSize, String sortByJobId, String sortByCompany, String sortByPosition, String sortByJobLocation, String sortDir)
     {
         Sort sort = (sortDir.equalsIgnoreCase("asc")) ?
-                    Sort.by(sortByJobId, sortByCompany, sortByPosition, sortByJobLocation).ascending() :
-                    Sort.by(sortByJobId, sortByCompany, sortByPosition, sortByJobLocation).descending();
+                    Sort.by(sortByJobId, sortByCompany, sortByPosition, sortByJobLocation)
+                        .ascending() :
+                    Sort.by(sortByJobId, sortByCompany, sortByPosition, sortByJobLocation)
+                        .descending();
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
 
-        List<Job> jobs = this.jobRepo.findAll(pageable).getContent();
+        List<Job> jobs = this.jobRepo.findAll(pageable)
+                                     .getContent();
 
         if (jobs.isEmpty())
         {
             throw new ApiException("No Jobs found");
         }
 
-        Long numOfPages = (long) this.jobRepo.findAll(pageable).getTotalPages();
+        Long numOfPages = (long) this.jobRepo.findAll(pageable)
+                                             .getTotalPages();
 
-        Long totalNumberOfJobs = this.jobRepo.findAll(pageable).getTotalElements();
+        Long totalNumberOfJobs = this.jobRepo.findAll(pageable)
+                                             .getTotalElements();
 
-        List<JobDTO> jobDTOs = jobs.stream().map(job ->
-            this.modelMapper.map(job, JobDTO.class)).toList();
+        List<JobDTO> jobDTOs = jobs.stream()
+                                   .map(job ->
+                                            this.modelMapper.map(job, JobDTO.class))
+                                   .toList();
 
-        jobDTOs = jobDTOs.stream().peek(j ->
-        {
-            j.setNumberOfPages(numOfPages);
-            j.setTotalNumberOfJobs(totalNumberOfJobs);
-        }).toList();
+        jobDTOs = jobDTOs.stream()
+                         .peek(j ->
+                               {
+                                   j.setNumberOfPages(numOfPages);
+                                   j.setTotalNumberOfJobs(totalNumberOfJobs);
+                               })
+                         .toList();
 
         return jobDTOs;
     }
@@ -150,9 +161,13 @@ public class JobServiceImpl implements JobService
             new SearchSpecificationForJobs(new SearchCriteria("position", ":", searchVal));
 
         List<Job> results =
-            jobRepo.findAll(Specification.where(spec1).or(spec2).or(spec3));
+            jobRepo.findAll(Specification.where(spec1)
+                                         .or(spec2)
+                                         .or(spec3));
 
-        return results.stream().map(j -> this.modelMapper.map(j, JobDTO.class)).toList();
+        return results.stream()
+                      .map(j -> this.modelMapper.map(j, JobDTO.class))
+                      .toList();
     }
 
     /**
@@ -163,8 +178,9 @@ public class JobServiceImpl implements JobService
     public List<JobDTO> getJobsByUserWithStats(Integer userId)
     {
 
-        User user = this.userRepo.findById(userId).orElseThrow(() ->
-            new UsernameNotFoundException("User with ID: " + userId + " not found!"));
+        User user = this.userRepo.findById(userId)
+                                 .orElseThrow(() ->
+                                                  new UsernameNotFoundException("User with ID: " + userId + " not found!"));
 
         List<Job> jobs = this.jobRepo.findByUser(user);
 
@@ -173,20 +189,28 @@ public class JobServiceImpl implements JobService
             throw new ApiException("No jobs created by user: " + user.getEmailID());
         }
 
-        String createdBy = jobs.stream().map(Job::getCreatedBy).findAny().map(Object::toString).orElse("");
+        String createdBy = jobs.stream()
+                               .map(Job::getCreatedBy)
+                               .findAny()
+                               .map(Object::toString)
+                               .orElse("");
 
         List<StatsResponse> statsResponses = this.jobRepo.getCountByStatus(createdBy);
 
-        statsResponses = statsResponses.stream().peek(s ->
-            s.setCreatedBy(createdBy)).toList();
+        statsResponses = statsResponses.stream()
+                                       .peek(s ->
+                                                 s.setCreatedBy(createdBy))
+                                       .toList();
 
         List<StatsResponse> finalStatsResponses = statsResponses;
-        List<JobDTO> jobDTOs = jobs.stream().map(job ->
-        {
-            job.setStatsResponses(finalStatsResponses);
-            return this.modelMapper.map(job, JobDTO.class);
+        List<JobDTO> jobDTOs = jobs.stream()
+                                   .map(job ->
+                                        {
+                                            job.setStatsResponses(finalStatsResponses);
+                                            return this.modelMapper.map(job, JobDTO.class);
 
-        }).toList();
+                                        })
+                                   .toList();
 
         return jobDTOs;
     }
@@ -194,8 +218,9 @@ public class JobServiceImpl implements JobService
     @Override
     public List<JobDTO> getJobsByUserWithMonthlyStats(Integer userId)
     {
-        User user = this.userRepo.findById(userId).orElseThrow(() ->
-            new UsernameNotFoundException("User with ID: " + userId + " not found!"));
+        User user = this.userRepo.findById(userId)
+                                 .orElseThrow(() ->
+                                                  new UsernameNotFoundException("User with ID: " + userId + " not found!"));
 
         List<Job> jobs = this.jobRepo.findByUser(user);
 
@@ -204,17 +229,26 @@ public class JobServiceImpl implements JobService
             throw new ApiException("No jobs created by user: " + user.getEmailID());
         }
 
-        String createdBy = jobs.stream().map(Job::getCreatedBy).findAny().map(Object::toString).orElse("");
+        String createdBy = jobs.stream()
+                               .map(Job::getCreatedBy)
+                               .findAny()
+                               .map(Object::toString)
+                               .orElse("");
 
         List<MonthlyAppResponse> monthlyAppResponseList = this.jobRepo.getCountByCreatedAt(createdBy);
 
-        List<JobDTO> jobDTOList = jobs.stream().map(j ->
-        {
-            monthlyAppResponseList.stream().map(m -> Integer.parseInt(m.getCreatedAt().getMonth().toString()) - 1);
-            j.setMonthlyAppResponseList(monthlyAppResponseList);
+        List<JobDTO> jobDTOList = jobs.stream()
+                                      .map(j ->
+                                           {
+                                               monthlyAppResponseList.stream()
+                                                                     .map(m -> Integer.parseInt(m.getCreatedAt()
+                                                                                                 .getMonth()
+                                                                                                 .toString()) - 1);
+                                               j.setMonthlyAppResponseList(monthlyAppResponseList);
 
-            return this.modelMapper.map(j, JobDTO.class);
-        }).collect(Collectors.toList());
+                                               return this.modelMapper.map(j, JobDTO.class);
+                                           })
+                                      .collect(Collectors.toList());
 
         return jobDTOList;
     }
@@ -232,7 +266,8 @@ public class JobServiceImpl implements JobService
 
         try
         {
-            Job job = this.jobRepo.findById(jobId).orElseThrow(() -> new ApiException("Job not found with ID: " + jobId));
+            Job job = this.jobRepo.findById(jobId)
+                                  .orElseThrow(() -> new ApiException("Job not found with ID: " + jobId));
 
             if (isNull(jobDTO.getJobType()))
             {
@@ -277,7 +312,8 @@ public class JobServiceImpl implements JobService
     @Override
     public JobDTO deleteJob(Integer jobId)
     {
-        Job job = this.jobRepo.findById(jobId).orElseThrow(() -> new ApiException("Job not found with ID: " + jobId));
+        Job job = this.jobRepo.findById(jobId)
+                              .orElseThrow(() -> new ApiException("Job not found with ID: " + jobId));
 
         this.jobRepo.delete(job);
 

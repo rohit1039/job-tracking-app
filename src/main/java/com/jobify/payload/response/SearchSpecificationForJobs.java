@@ -22,9 +22,11 @@ public class SearchSpecificationForJobs implements Specification<Job>
         (Root<Job> root, CriteriaQuery<?> query, CriteriaBuilder builder)
     {
 
-        if (criteria.getOperation().equalsIgnoreCase(":"))
+        if (criteria.getOperation()
+                    .equalsIgnoreCase(":"))
         {
-            if (root.get(criteria.getColumn()).getJavaType() == String.class)
+            if (root.get(criteria.getColumn())
+                    .getJavaType() == String.class)
             {
                 return builder.like(
                     root.get(criteria.getColumn()), "%" + criteria.getValue() + "%");

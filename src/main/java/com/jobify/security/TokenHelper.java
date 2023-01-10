@@ -52,7 +52,10 @@ public class TokenHelper
      */
     private Claims extractAllClaims(String token)
     {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parser()
+                   .setSigningKey(SECRET_KEY)
+                   .parseClaimsJws(token)
+                   .getBody();
 
     }
 
@@ -73,10 +76,13 @@ public class TokenHelper
      */
     private String createToken(Map<String, Object> claims, String subject)
     {
-        return Jwts.builder().setClaims(claims).setSubject(subject)
+        return Jwts.builder()
+                   .setClaims(claims)
+                   .setSubject(subject)
                    .setIssuedAt(new Date(System.currentTimeMillis()))
                    .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME))
-                   .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+                   .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                   .compact();
     }
 
     /**
@@ -88,7 +94,9 @@ public class TokenHelper
     {
         try
         {
-            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+            Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token);
             return true;
         } catch (Exception e)
         {

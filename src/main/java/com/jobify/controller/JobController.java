@@ -85,7 +85,9 @@ public class JobController
     {
         List<JobDTO> jobDTO = this.jobService.searchByAllFields(searchVal);
 
-        List<JobApiResponse> jobApiResponse = jobDTO.stream().map(j -> this.modelMapper.map(j, JobApiResponse.class)).collect(Collectors.toList());
+        List<JobApiResponse> jobApiResponse = jobDTO.stream()
+                                                    .map(j -> this.modelMapper.map(j, JobApiResponse.class))
+                                                    .collect(Collectors.toList());
 
         Map<String, List<JobApiResponse>> responseMap = new HashMap<>();
 
@@ -118,7 +120,13 @@ public class JobController
                                                             @RequestParam(required = false, defaultValue = "jobLocation", value = "sortBy") String sortByJobLocation,
                                                             @RequestParam(required = false, defaultValue = "asc", value = "sortDir") String sortDir)
     {
-        List<JobDTO> jobDTO = this.jobService.getAllJobs(pageNumber, pageSize, sortByJobId, sortByCompany, sortByPosition, sortByJobLocation, sortDir);
+        List<JobDTO> jobDTO = this.jobService.getAllJobs(pageNumber,
+                                                         pageSize,
+                                                         sortByJobId,
+                                                         sortByCompany,
+                                                         sortByPosition,
+                                                         sortByJobLocation,
+                                                         sortDir);
 
         List<JobApiResponse> list = jobDTO.stream()
                                           .map(j -> this.modelMapper.map(j, JobApiResponse.class))
@@ -129,12 +137,14 @@ public class JobController
         getAllJobsWithPagination.setJobs(list);
         getAllJobsWithPagination.setNumberOfJobs((long) list.size());
 
-        List<GetAllJobsWithPagination> jobs = jobDTO.stream().map(j ->
-        {
-            getAllJobsWithPagination.setNumberOfPages(j.getNumberOfPages());
-            getAllJobsWithPagination.setTotalNumberOfJobs(j.getTotalNumberOfJobs());
-            return getAllJobsWithPagination;
-        }).toList();
+        List<GetAllJobsWithPagination> jobs = jobDTO.stream()
+                                                    .map(j ->
+                                                         {
+                                                             getAllJobsWithPagination.setNumberOfPages(j.getNumberOfPages());
+                                                             getAllJobsWithPagination.setTotalNumberOfJobs(j.getTotalNumberOfJobs());
+                                                             return getAllJobsWithPagination;
+                                                         })
+                                                    .toList();
 
         return new ResponseEntity<>(jobs.get(0), HttpStatus.OK);
     }
@@ -153,7 +163,11 @@ public class JobController
     {
         List<JobDTO> jobDTOs = this.jobService.getJobsByUserWithStats(userId);
 
-        List<List<StatsResponse>> statsResponses = jobDTOs.stream().map(JobDTO::getStatsResponses).toList();
+        List<List<StatsResponse>>
+            statsResponses =
+            jobDTOs.stream()
+                   .map(JobDTO::getStatsResponses)
+                   .toList();
 
         Map<String, List<StatsResponse>> response = new HashMap<>();
 
@@ -173,7 +187,9 @@ public class JobController
     {
         List<JobDTO> jobDTOs = this.jobService.getJobsByUserWithMonthlyStats(userId);
 
-        List<List<MonthlyAppResponse>> monthlyAppResponseList = jobDTOs.stream().map(JobDTO::getMonthlyAppResponseList).toList();
+        List<List<MonthlyAppResponse>> monthlyAppResponseList = jobDTOs.stream()
+                                                                       .map(JobDTO::getMonthlyAppResponseList)
+                                                                       .toList();
 
         Map<String, List<MonthlyAppResponse>> response = new HashMap<>();
 

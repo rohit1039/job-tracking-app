@@ -32,7 +32,9 @@ public class SwaggerConfig
      */
     private List<SecurityContext> securityContexts()
     {
-        return Arrays.asList(SecurityContext.builder().securityReferences(sr()).build());
+        return Arrays.asList(SecurityContext.builder()
+                                            .securityReferences(sr())
+                                            .build());
     }
 
     /**
@@ -55,9 +57,13 @@ public class SwaggerConfig
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(getInfo())
                                                       .securityContexts(securityContexts())
                                                       .securitySchemes(Arrays.asList(apiKeys()))
-                                                      .select().apis(RequestHandlerSelectors.any())
-                                                      .apis(RequestHandlerSelectors.basePackage("org.springframework.boot").negate()) // remove basic error controller from Swagger UI
-                                                      .paths(PathSelectors.any()).build();
+                                                      .select()
+                                                      .apis(RequestHandlerSelectors.any())
+                                                      .apis(RequestHandlerSelectors.basePackage(
+                                                                                       "org.springframework.boot")
+                                                                                   .negate()) // remove basic error controller from Swagger UI
+                                                      .paths(PathSelectors.any())
+                                                      .build();
     }
 
     /**
@@ -66,9 +72,14 @@ public class SwaggerConfig
     private ApiInfo getInfo()
     {
 
-        return new ApiInfo("Jobify", "This project is developed by Rohit Parida", "1.0", "Terms of service",
-            new Contact("Rohit Parida", "www.github.com/rohit1039", "rohitparida0599@gmail.com"), "License",
-            "APIs license", Collections.emptyList());
+        return new ApiInfo("Jobify",
+                           "This project is developed by Rohit Parida",
+                           "1.0",
+                           "Terms of service",
+                           new Contact("Rohit Parida", "www.github.com/rohit1039", "rohitparida0599@gmail.com"),
+                           "License",
+                           "APIs license",
+                           Collections.emptyList());
     }
 
 }

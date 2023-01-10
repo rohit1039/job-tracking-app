@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SearchCriteria {
+public class SearchCriteria
+{
     private String column;
     private String operation;
     private Object value;

@@ -46,7 +46,7 @@ public class UserPdfExporter extends AbstractExporter
 
         document.add(table);
 
-        LOGGER.info("{}", "Excel file downloaded successfully!");
+        LOGGER.info("{}", "Pdf file downloaded successfully!");
 
         document.close();
 
@@ -56,14 +56,18 @@ public class UserPdfExporter extends AbstractExporter
     {
         for (UserDTO user : listUsers)
         {
-            table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
-            table.getDefaultCell().setPadding(5);
+            table.getDefaultCell()
+                 .setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.getDefaultCell()
+                 .setVerticalAlignment(Element.ALIGN_MIDDLE);
+            table.getDefaultCell()
+                 .setPadding(5);
             table.addCell(String.valueOf(user.getUserID()));
             table.addCell(user.getEmailID());
             table.addCell(user.getFirstName());
             table.addCell(user.getLastName());
-            table.addCell(user.getAge().toString());
+            table.addCell(user.getAge()
+                              .toString());
             table.addCell(user.getLocation());
         }
     }

@@ -16,7 +16,6 @@ public class UserCsvExporter extends AbstractExporter
     private static final Logger LOGGER = LogManager.getLogger(UserCsvExporter.class.getName());
 
     /**
-     *
      * @param listUserDTOs
      * @param response
      * @throws IOException
@@ -26,7 +25,7 @@ public class UserCsvExporter extends AbstractExporter
         super.setResponseHeader(response, "text/csv", ".csv", "users_");
 
         ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(),
-            CsvPreference.STANDARD_PREFERENCE);
+                                                     CsvPreference.STANDARD_PREFERENCE);
 
         String[] csvHeader = {"User ID", "First Name", "Last Name", "Email ID", "Location", "Age"};
         String[] fieldMapping = {"userID", "firstName", "lastName", "emailID", "location", "age"};

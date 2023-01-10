@@ -62,8 +62,8 @@ public class UserController
      * @param modelMapper
      */
     public UserController(UserService userService, AuthenticationManager authenticationManager,
-                          CustomUserDetailsService customUserDetailsService, TokenHelper tokenHelper,
-                          ModelMapper modelMapper)
+        CustomUserDetailsService customUserDetailsService, TokenHelper tokenHelper,
+        ModelMapper modelMapper)
     {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
@@ -97,7 +97,8 @@ public class UserController
 
             return new ResponseEntity<>(userApiResponse, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>("User already exists with email: " + userDTO.getEmailID(), HttpStatus.valueOf(httpStatus.value()));
+        return new ResponseEntity<>("User already exists with email: " + userDTO.getEmailID(),
+                                    HttpStatus.valueOf(httpStatus.value()));
     }
 
     /**
@@ -156,13 +157,15 @@ public class UserController
         @ApiResponse(responseCode = "500", description = "Some Exception Occurred")})
     @GetMapping("/users/all")
     public ResponseEntity<GetAllUsersWithPagination> getAllUsers(@RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
-                                                                 @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
-                                                                 @RequestParam(required = false, defaultValue = "userId", value = "sortBy") String sortByUserId,
-                                                                 @RequestParam(required = false, defaultValue = "location", value = "sortBy") String sortByLocation,
-                                                                 @RequestParam(required = false, defaultValue = "emailID", value = "sortBy") String sortByUsername,
-                                                                 @RequestParam(required = false, defaultValue = "asc", value = "sortDir") String sortDir)
+        @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+        @RequestParam(required = false, defaultValue = "userId", value = "sortBy") String sortByUserId,
+        @RequestParam(required = false, defaultValue = "location", value = "sortBy") String sortByLocation,
+        @RequestParam(required = false, defaultValue = "emailID", value = "sortBy") String sortByUsername,
+        @RequestParam(required = false, defaultValue = "asc", value = "sortDir") String sortDir)
     {
-        List<UserDTO> userDTO = this.userService.getAllUsers(pageNumber, pageSize, sortByUserId, sortByLocation, sortByUsername, sortDir);
+        List<UserDTO>
+            userDTO =
+            this.userService.getAllUsers(pageNumber, pageSize, sortByUserId, sortByLocation, sortByUsername, sortDir);
 
         List<UserApiResponse> apiResponse = userDTO.stream()
                                                    .map(u -> this.modelMapper.map(u, UserApiResponse.class))
@@ -173,18 +176,19 @@ public class UserController
         getAllUsersWithPagination.setUsers(apiResponse);
         getAllUsersWithPagination.setNumberOfUsers((long) apiResponse.size());
 
-        List<GetAllUsersWithPagination> users = userDTO.stream().map(j ->
-        {
-            getAllUsersWithPagination.setNumberOfPages(j.getNumberOfPages());
-            getAllUsersWithPagination.setTotalNumberOfUsers(j.getTotalNumberOfUsers());
-            return getAllUsersWithPagination;
-        }).toList();
+        List<GetAllUsersWithPagination> users = userDTO.stream()
+                                                       .map(j ->
+                                                            {
+                                                                getAllUsersWithPagination.setNumberOfPages(j.getNumberOfPages());
+                                                                getAllUsersWithPagination.setTotalNumberOfUsers(j.getTotalNumberOfUsers());
+                                                                return getAllUsersWithPagination;
+                                                            })
+                                                       .toList();
 
         return new ResponseEntity<>(users.get(0), HttpStatus.OK);
     }
 
     /**
-     *
      * @param searchVal
      * @return
      */
@@ -198,7 +202,9 @@ public class UserController
     {
         List<UserDTO> userDTO = this.userService.searchByAllFields(searchVal);
 
-        List<UserApiResponse> userApiResponses = userDTO.stream().map(j -> this.modelMapper.map(j, UserApiResponse.class)).collect(Collectors.toList());
+        List<UserApiResponse> userApiResponses = userDTO.stream()
+                                                        .map(j -> this.modelMapper.map(j, UserApiResponse.class))
+                                                        .collect(Collectors.toList());
 
         Map<String, List<UserApiResponse>> responseMap = new HashMap<>();
 

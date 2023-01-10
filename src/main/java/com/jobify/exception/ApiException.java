@@ -10,7 +10,6 @@ import lombok.Setter;
 public class ApiException extends RuntimeException
 {
     /**
-     *
      * @param message
      */
     public ApiException(String message)

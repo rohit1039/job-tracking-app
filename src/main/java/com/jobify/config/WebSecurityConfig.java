@@ -27,19 +27,16 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableWebMvc
 public class WebSecurityConfig
 {
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
-
-    @Autowired
-    private JwtAuthenticationEntryPoint authenticationEntryPoint;
-
-    @Autowired
-    private JwtAuthenticationFilter authenticationFilter;
-
     public static final String[] PUBLIC_URLS = {"/users/**", "/jobs/**", "/v3/api-docs", "/v2/api-docs",
-        "/swagger-resources/**", "/swagger-ui/**", "/webjars/**"
+                                                "/swagger-resources/**", "/swagger-ui/**", "/webjars/**"
 
     };
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+    @Autowired
+    private JwtAuthenticationEntryPoint authenticationEntryPoint;
+    @Autowired
+    private JwtAuthenticationFilter authenticationFilter;
 
     /**
      * @param http
@@ -52,17 +49,22 @@ public class WebSecurityConfig
         http.csrf()
             .disable()
             .authorizeHttpRequests()
-            .antMatchers(HttpMethod.POST, "/users/register").permitAll()
-            .antMatchers(HttpMethod.POST, "/users/login").permitAll()
+            .antMatchers(HttpMethod.POST, "/users/register")
+            .permitAll()
+            .antMatchers(HttpMethod.POST, "/users/login")
+            .permitAll()
             .antMatchers(HttpMethod.GET, PUBLIC_URLS)
             .permitAll()
-            .anyRequest().authenticated()
+            .anyRequest()
+            .authenticated()
             .and()
             .exceptionHandling()
             .authenticationEntryPoint(authenticationEntryPoint)
-            .and().sessionManagement()
+            .and()
+            .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and().addFilterBefore(this.authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .and()
+            .addFilterBefore(this.authenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .authenticationProvider(daoAuthenticationProvider());
 
         return http.build();

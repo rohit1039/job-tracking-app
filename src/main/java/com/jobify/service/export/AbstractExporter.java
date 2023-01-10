@@ -9,7 +9,6 @@ import java.util.Date;
 public class AbstractExporter
 {
     /**
-     *
      * @param response
      * @param contentType
      * @param extension

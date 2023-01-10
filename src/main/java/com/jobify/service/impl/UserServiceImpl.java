@@ -54,31 +54,38 @@ public class UserServiceImpl implements UserService
     public List<UserDTO> getAllUsers(int pageNumber, int pageSize, String sortByUserId, String sortByLocation, String sortByUsername, String sortDir)
     {
         Sort sort = (sortDir.equalsIgnoreCase("asc")) ?
-                    Sort.by(sortByUserId, sortByLocation, sortByUsername).ascending() :
-                    Sort.by(sortByUserId, sortByLocation, sortByUsername).descending();
+                    Sort.by(sortByUserId, sortByLocation, sortByUsername)
+                        .ascending() :
+                    Sort.by(sortByUserId, sortByLocation, sortByUsername)
+                        .descending();
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
 
-        List<User> users = this.userRepo.findAll(pageable).getContent();
+        List<User> users = this.userRepo.findAll(pageable)
+                                        .getContent();
 
         if (users.isEmpty())
         {
             throw new UsernameNotFoundException("No users exists!");
         }
 
-        Long numOfPages = (long) this.userRepo.findAll(pageable).getTotalPages();
+        Long numOfPages = (long) this.userRepo.findAll(pageable)
+                                              .getTotalPages();
 
-        Long totalNumberOfUsers = this.userRepo.findAll(pageable).getTotalElements();
+        Long totalNumberOfUsers = this.userRepo.findAll(pageable)
+                                               .getTotalElements();
 
         List<UserDTO> userDTOs = users.stream()
                                       .map(u -> this.modelMapper.map(u, UserDTO.class))
                                       .collect(Collectors.toList());
 
-        userDTOs = userDTOs.stream().peek(u ->
-        {
-            u.setNumberOfPages(numOfPages);
-            u.setTotalNumberOfUsers(totalNumberOfUsers);
-        }).toList();
+        userDTOs = userDTOs.stream()
+                           .peek(u ->
+                                 {
+                                     u.setNumberOfPages(numOfPages);
+                                     u.setTotalNumberOfUsers(totalNumberOfUsers);
+                                 })
+                           .toList();
 
         return userDTOs;
     }
@@ -99,15 +106,21 @@ public class UserServiceImpl implements UserService
             new SearchSpecificationForUsers(new SearchCriteria("lastName", ":", searchVal));
 
         List<User> results =
-            userRepo.findAll(Specification.where(spec1).or(spec2).or(spec3).or(spec4));
+            userRepo.findAll(Specification.where(spec1)
+                                          .or(spec2)
+                                          .or(spec3)
+                                          .or(spec4));
 
-        return results.stream().map(j -> this.modelMapper.map(j, UserDTO.class)).toList();
+        return results.stream()
+                      .map(j -> this.modelMapper.map(j, UserDTO.class))
+                      .toList();
     }
 
     @Override
     public UserDTO updatedUserByUserId(UserDTO userDTO, Integer userId)
     {
-        User userInDB = this.userRepo.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + userId));
+        User userInDB = this.userRepo.findById(userId)
+                                     .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + userId));
 
         userInDB.setFirstName(userDTO.getFirstName());
         userInDB.setLastName(userDTO.getLastName());
@@ -132,7 +145,8 @@ public class UserServiceImpl implements UserService
     {
         Optional<User> user = this.userRepo.findByEmailID(emailID);
 
-        return user.map(value -> this.modelMapper.map(value, UserDTO.class)).orElse(null);
+        return user.map(value -> this.modelMapper.map(value, UserDTO.class))
+                   .orElse(null);
 
     }
 
